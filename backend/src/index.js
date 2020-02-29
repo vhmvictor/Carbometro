@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes'); 
 const index = require('./app/controllers/index');
-
+const bodyParser = require('body-parser');
+const cors = require ('cors');
 
 const app = express();
 
@@ -14,8 +15,11 @@ mongoose.connect('mongodb+srv://vhmvictor:131296vh@cluster0-zp7kr.mongodb.net/ca
     useFindAndModify: false,
 });
 
+
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(routes); //importando as routas do arquivo routes.js e setando no express
+app.use(cors());
 
 index(app); // atribuindo o app para todos os controllers
 
@@ -24,5 +28,5 @@ index(app); // atribuindo o app para todos os controllers
 
 //banco: mongoDB
 
-app.listen(3000)
+app.listen(3333)
 
