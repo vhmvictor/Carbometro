@@ -3,7 +3,7 @@
     background: rgba(0, 0, 0, .25);
     color: #fdfdfd;
     margin-top: 1rem;
-    width: 100%;
+    width: 450px;
     padding: 1rem;
     font-size: 1.2rem;
     border-radius: 7px;
@@ -19,15 +19,42 @@
     color: #ff8080;
 }
 
+.Button-Page {
+    display: block;
+    text-align: center;
+ } 
+
+.Button-Register {
+   margin-top: 25px;
+}
+
+.Link-ResetPassword {
+    text-align: right;
+    margin-top: 5px;
+}
+
+.Reset-Text {
+    color: #fdfd
+}
+
 .Login-Btn {
+    background: #00cc99;
+    color: #fdfdfd;
+    padding: .5rem 5rem;
+    border: none;
+    border-radius: 5px;
+    margin-top: 3rem;
+}
+
+.Login-Btn:hover {
+    cursor: pointer;
+}
+
+.Register-link {
     background: #00cc99;
     color: #fdfdfd;
     padding: .5rem 2rem;
     border: none;
     border-radius: 5px;
-    margin-top: 2rem;
-}
-
-.Login-Btn:hover {
-    cursor: pointer;
+    margin-top: 3rem;
 }

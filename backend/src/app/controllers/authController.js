@@ -18,6 +18,17 @@ function generateToken(params = {}) { //função para atenticação com token (h
     });
 }
 
+routes.get('/users', async (request, response) => {
+    try {
+        const users = await User.find();
+        
+        return response.send({ users });
+    } catch (err) {
+        console.log(err);
+        return response.status(400).send({ error: 'Error loading User' });
+    }
+})
+
 routes.post('/register', async (request, response) => {
     const { email } = request.body; //pegando o email que foi inserido no front pelo usuário
 

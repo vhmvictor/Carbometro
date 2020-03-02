@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 import { ErrorMessage, Formik, Form, Field } from 'formik' 
 import * as yup from 'yup'; 
@@ -10,12 +11,12 @@ import './Login.css';
 const Login = () => {
     const handleSubmit = values => {
         axios.post('http://localhost:3333/auth/authenticate', values)
-            .then(response => {
+            .then(response => { //esqueça a ação e executa o comando de redirecionamento
                 const { data } = response
                 if(data) {
                     console.log(data);
-                    localStorage.setItem('app-token', data)
-                    history.push('/')
+                    localStorage.setItem('app-token', data);
+                    history.push('/');
                 }
             })
     }
@@ -55,7 +56,17 @@ const Login = () => {
                             className="Login-Error"
                         />
                     </div>
-                    <button className="Login-Btn" type="submit">Login</button>
+                    <div className="Button-Page">
+                        <div className="Link-ResetPassword">
+                            <Link className="Reset-Text" to="/ForgotPassword" style={{ textDecoration: 'none' }}>Forgot Password</Link>
+                        </div>
+                        <div className="Button-Login">
+                            <button className="Login-Btn" type="submit">Login</button>
+                        </div>
+                        <div className="Button-Register">
+                            <Link className="Register-link" to="/register" style={{ textDecoration: 'none' }}>Create new acount</Link>
+                        </div>
+                    </div>
                 </Form>
             </Formik>
         </>
