@@ -1,71 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react'
+import api from '../../services/api';
+import { Redirect } from 'react-router';
 
-import { ErrorMessage, Formik, Form, Field } from 'formik' 
-import * as yup from 'yup'; 
-import axios from 'axios';
-
-import { history } from '../../history'
-import '../login/Login.css';
+import './Register.css'
 
 const Register = () => {
-    const handleSubmit = values => {
-        axios.post('http://localhost:3333/auth/register', values)
-            .then(response => { //esqueça a ação e executa o comando de redirecionamento
-                history.push('/login')
+    const [users, setUsers] = useState([]);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [redirect, setRedirect] = useState(false);
+
+    async function handleSubmit(e) {
+        e.preventDefault()
+
+        await api.post('/register', {
+            name,
+            email,
+            password
+        })
+            .then(response => {
+                setUsers([...users, response.data]);
+                setRedirect(true)
+                console.log(response)
             })
+            .catch(error => console.log(error))
     }
-    const validations = yup.object().shape({
-        email: yup.string().email().required(),
-        password: yup.string().min(8).required()
-    })
+
+    if (redirect) {
+        return <Redirect to="/login" />
+    }
+
     return (
-        <>
-            <h1>Register</h1>
-            <p>Fill the fields to create a new user</p>
-            <Formik 
-                initialValues={{}} 
-                onSubmit={handleSubmit}
-                validationSchema={validations}
-            >
-                <Form className="Login">
-                    <div className="Login-Group">
-                        <Field //input
-                            name="name" 
-                            className="Login-Field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="name" 
-                            className="Login-Error"
+        <div id="app">
+            <aside>
+                <h1>Cadastre-se</h1>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <input
+                            placeholder="Name *"
+                            className="Register-Field"
+                            name="name"
+                            id="name"
+                            required value={name}
+                            onChange={e => setName(e.target.value)}
                         />
                     </div>
-                    <div className="Login-Group">
-                        <Field //input
-                            name="email" 
-                            className="Login-Field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="email" 
-                            className="Login-Error"
-                        />
-                    </div>
-                    <div className="Login-Group">
-                        <Field //input
-                            name="password" 
-                            className="Login-Field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="password" 
-                            className="Login-Error"
+                    <div>
+                        <input
+                            placeholder="Email *"
+                            className="Register-Field"
+                            name="email"
+                            id="email"
+                            required value={email}
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </div>
-                    <button className="Login-Btn" type="submit">Register</button>
-                </Form>
-            </Formik>
-        </>
+                    <div>
+                        <input
+                            placeholder="Password *"
+                            className="Register-Field"
+                            name="password"
+                            id="password"
+                            required value={password}
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <button className="Register-Btn" type="submit">Registrar</button>
+                </form>
+            </aside>
+        </div>
     )
 }
 
-export default Register;
+export default Register

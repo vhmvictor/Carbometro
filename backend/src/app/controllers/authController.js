@@ -5,12 +5,15 @@ const crypto = require('crypto'); //gera token para recuperação de senha
 const mailer = require('../../modules/mailer'); //lib para envio de email
 
 const authConfig = require('../../config/auth');
+const authMiddleware = require('../middlewares/auth');
 
 const User = require('../models/User');
 
 const { Router } = require('express');
 
 const routes = Router();
+const authRoutes = Router();
+authRoutes.use(authMiddleware);
 
 function generateToken(params = {}) { //função para atenticação com token (hash: utlizado da Config)
     return jwt.sign(params, authConfig.secret, {
@@ -50,7 +53,7 @@ routes.post('/register', async (request, response) => {
 
 });
 
-routes.post('/authenticate', async (request, response) => {
+routes.post('/login', async (request, response) => {
     const { email, password } = request.body;
 
     const user = await User.findOne({ email }).select('+password');
@@ -139,4 +142,4 @@ const { email, token, password } = request.body; //usa-se "request" porque quere
     }
 });
 
-module.exports = app => app.use('/auth', routes);
+module.exports = app => { app.use('/auth', authRoutes), app.use('/', routes) }

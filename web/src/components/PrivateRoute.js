@@ -1,10 +1,18 @@
-import React from 'react';
+import React from 'react'
+import { Route, Redirect } from 'react-router';
+import { isAuthenticated } from '../services/auth';
 
-import { Route, Redirect } from 'react-router'
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        isAuthenticated() ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+        )
+      }
+    />
+  );
 
-const PrivateRoute = props => {
-    const isLogged = !!localStorage.getItem('app-token'); //criando rotas privadas. Sómente terá acesso a rota se "app-token" existir, logo está autenticado
-    return isLogged ? <Route {...props}/> : <Redirect to="/login"/>
-} 
-
-export default PrivateRoute
+export default PrivateRoute;

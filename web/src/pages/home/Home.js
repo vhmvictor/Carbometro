@@ -1,24 +1,15 @@
-import React from 'react';
-
-import Logout from '../components/Logout';
-
-import '../login/Login.css';
+import React from 'react'
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-    async function handleLogout(e) {
-        e.preventDefault();
-        Logout();
-    }
     return (
-        <>
-            <h1>Home</h1>
-            <p>Welkome to Carbometro!</p>
-            
-            <div>
-                <button className="Login-Btn" onClick={handleLogout}>Logout</button>
-            </div>
-        </>
+        <header>
+            <h1>Bem-vindo ao Carbometro!</h1>
+        </header>
+        //estudar estrutura do reactjs
+       
     )
 }
 
-export default Home;
+export default Home
