@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { logout } from '../../services/auth'
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+
+import './LoggedHome.css'
 
 const LoggedHome = () => {
 
@@ -17,11 +20,19 @@ const LoggedHome = () => {
     if (redirect) return <Redirect to="/login" />
 
     return (
-        <div id="root" >
-            <button onClick={handleLogout} >Logout</button>
-        </div >
+        <header className="Logged-header">
+            <div className="Carb-title">
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                    <h1>Carbometro</h1>
+                </Link>
+            </div>
+            <div className="Btn-header">
+                <button className="Btn-logout" onClick={handleLogout}>
+                    Logout
+                </button>
+            </div>
+        </header>
     )
-
 }
 
 export default LoggedHome

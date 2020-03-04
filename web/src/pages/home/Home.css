@@ -1,0 +1,35 @@
+.Home-page {
+    width: 1600px;
+}
+
+.Home-header {
+    width: 1600px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(233, 72, 8, 0.959);
+}
+
+.Carb-title {
+    width: 200px;
+    text-align: left;
+    margin-left: 100px;
+}
+
+.Carb-title h1 {
+    font-weight: bold;
+    color: white;
+}
+
+.Btn-header {
+    margin-left: 950px;
+}
+
+.Btn-login {
+    margin-right: 20px;
+    color: white;
+}
+
+.Btn-register {
+    color: white;
+
+}

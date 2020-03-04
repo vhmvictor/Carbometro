@@ -1,0 +1,26 @@
+.Logged-page {
+    width: 1600px;
+}
+
+.Logged-header {
+    width: 1600px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(233, 72, 8, 0.959);
+}
+
+.Logged h1 {
+    color: white;
+}
+
+.Btn-logout {
+    margin-left: 150px;
+    padding: 0;
+    color: white;
+    background-color:  rgba(233, 72, 8, 0.959);
+    border: none;
+}
+
+.Btn-logout:hover {
+    cursor: pointer;
+}

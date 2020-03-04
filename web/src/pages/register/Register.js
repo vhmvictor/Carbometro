@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import api from '../../services/api';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import './Register.css'
 
@@ -32,9 +33,18 @@ const Register = () => {
     }
 
     return (
-        <div id="app">
-            <aside>
-                <h1>Cadastre-se</h1>
+        <>
+            <header className="Register-header">
+                <div className="Carb-title">
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <h1>Carbometro</h1>
+                    </Link>
+                </div>
+            </header>
+            <div className="Register">
+                <div className="Register-title">
+                    <h1>Cadastrar-se</h1>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <input
@@ -68,8 +78,8 @@ const Register = () => {
                     </div>
                     <button className="Register-Btn" type="submit">Registrar</button>
                 </form>
-            </aside>
-        </div>
+            </div>
+        </>
     )
 }
 

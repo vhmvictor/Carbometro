@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import api from '../../services/api';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+
+import ReactDOM from 'react-dom';
 
 import './ForgotPassword.css'
 
@@ -19,7 +22,15 @@ const ForgotPassword = () => {
                 console.log(redirect)
                 console.log(response)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+
+                const element = <div className="alert-alert-danger" role="alert">
+                    Email incorreto!
+                                </div>
+
+                ReactDOM.render(element, document.getElementById("boot"));
+            })
     }
 
     if (redirect) {
@@ -27,10 +38,21 @@ const ForgotPassword = () => {
     }
 
     return (
-        <div id="app">
-            <aside>
-                <h1>Insira o email de cadastro</h1>
-                <p>Enviaremos um codigo de verificação em seu email</p>
+        <>
+            <header className="Forgot-header">
+                <div className="Carb-title">
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <h1>Carbometro</h1>
+                    </Link>
+                </div>
+            </header>
+            <div className="ForgotPassword">
+                <div className="Forgot-title">
+                    <h1>Insira o email de cadastro</h1>
+                    <p>Enviaremos um codigo de verificação em seu email</p>
+                </div>
+                <div id="boot">
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <input
@@ -44,9 +66,9 @@ const ForgotPassword = () => {
                     </div>
                     <button className="ForgotPassword-Btn" type="submit">Enviar</button>
                 </form>
-            </aside>
-        </div>
+            </div>
+        </>
     )
 }
-    
+
 export default ForgotPassword

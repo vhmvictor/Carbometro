@@ -1,3 +1,26 @@
+.Login {
+    margin: 0 auto;
+    width: 480px;
+}
+
+.Login-title h1{
+    font-weight: bold;
+    text-align: center;
+    color:  rgba(233, 72, 8, 0.959);
+}
+
+.alert-alert-danger {
+    color: red;
+    font-weight: bold;
+}
+
+.Login-header {
+    width: 1600px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(233, 72, 8, 0.959);
+}
+
 .Login-Field {
     border: none;
     background: rgba(0, 0, 0, .25);
@@ -21,19 +44,23 @@
 }
 
 .Login-Btn {
-    background: #00cc99;
-    color: #fdfdfd;
-    padding: .5rem 2rem;
+    margin-right: 220px;
+    padding: 8px;
+    width: 100px;
+    background:  rgba(233, 72, 8, 0.959);
+    color: white;
     border: none;
-    border-radius: 5px;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
 }
 
 .Login-Btn:hover {
     cursor: pointer;
 }
 
-.forgot_password {
+.forgot_password p {
     color: white;
+    text-align: left;
+}
+
+.forgot_password {
+    display: flex;
 }

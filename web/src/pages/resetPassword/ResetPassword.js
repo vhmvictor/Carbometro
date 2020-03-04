@@ -2,12 +2,13 @@ import React from 'react'
 import { useState } from "react";
 import api from '../../services/api';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import './ResetPassword.css'
 
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
-    const [newPassword, setnewPassword] = useState('');
+    const [password, setpassword] = useState('');
     const [token, setToken] = useState('');
     const [redirect, setRedirect] = useState(false);
 
@@ -17,7 +18,7 @@ const ResetPassword = () => {
         await api.post('/reset_password', {
             email,
             token,
-            newPassword
+            password
         })
             .then(response => {
                 setRedirect(true)
@@ -32,10 +33,19 @@ const ResetPassword = () => {
     }
 
     return (
-        <div id="app">
-            <aside>
-                <h1>Preencha as informações abaixo</h1>
-                <p>Ps: no campo token, informe o token que recebeu por email</p>
+        <>
+            <header className="Reset-header">
+                <div className="Carb-title">
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <h1>Carbometro</h1>
+                    </Link>
+                </div>
+            </header>
+            <div className="ResetPassword">
+                <div className="Reset-title">
+                    <h1>Preencha as informações abaixo</h1>
+                    <p>Ps: no campo token, informe o token que recebeu por email</p>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label id="inputTitle" htmlFor="email" ></label>
@@ -66,14 +76,14 @@ const ResetPassword = () => {
                             className="ResetPassword-Field"
                             name="newPassword"
                             id="newPassword"
-                            required value={newPassword}
-                            onChange={e => setnewPassword(e.target.value)}
+                            required value={password}
+                            onChange={e => setpassword(e.target.value)}
                         />
                     </div>
                     <button className="ResetPassword-Btn" type="submit">Redefinir Senha</button>
                 </form>
-            </aside>
-        </div>
+            </div>
+        </>
     )
 }
 
