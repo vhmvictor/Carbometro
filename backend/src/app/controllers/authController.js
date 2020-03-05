@@ -21,10 +21,21 @@ function generateToken(params = {}) { //função para atenticação com token (h
     });
 }
 
+routes.get('/user/:id', async (request, response) => {
+    const id = request.params.id;
+    const user = await User.findById(id)
+    try {
+        return response.json({ user });
+    } catch (err) {
+        console.log(err);
+        return response.status(400).send({ error: 'Error loading User' });
+    }
+})
+
 routes.get('/users', async (request, response) => {
     try {
         const users = await User.find();
-        
+
         return response.send({ users });
     } catch (err) {
         console.log(err);
@@ -114,7 +125,7 @@ routes.post('/forgot_password', async (request, response) => {
 });
 
 routes.post('/reset_password', async (request, response) => {
-const { email, token, password } = request.body; //usa-se "request" porque queremos pegar as informações que estão no parametro que serão digitadas pelo usuário
+    const { email, token, password } = request.body; //usa-se "request" porque queremos pegar as informações que estão no parametro que serão digitadas pelo usuário
 
     try {
         //passando para o objeto "user" as informações do usuario contidas no banco

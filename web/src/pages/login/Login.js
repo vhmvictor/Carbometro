@@ -4,7 +4,7 @@ import api from '../../services/api'
 import ReactDOM from 'react-dom';
 
 import './Login.css'
-import { login } from '../../services/auth';
+import { login, setId } from '../../services/auth';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -24,6 +24,7 @@ const Login = () => {
         })
             .then(response => {
                 login(response.data.token) //setando localStore=token
+                setId(response.data.user._id)
                 setUsers([...users, response.data]); //controle de acesso
                 setRedirect(true)
                 console.log(response)

@@ -9,7 +9,7 @@ const routes = Router();
 routes.use(authMiddleware);
 
 //lista glicemias do usuário logado 
-routes.get('/search/:id', async (request, response) => {
+routes.get('/searchGlucose/:id', async (request, response) => {
     try {
         const blood_glucoses = await (await User.findById(request.params.id)).get('blood_glucoses');
         
@@ -24,7 +24,6 @@ routes.get('/search/:id', async (request, response) => {
 routes.get('/', async (request, response) => {
     try {
         const users = await User.find();
-        
         return response.send({ users });
     } catch (err) {
         console.log(err);
@@ -33,7 +32,7 @@ routes.get('/', async (request, response) => {
 });
 
 //Adiciona uma nova glicemia para o usuário logado 
-routes.post('/:id', async (request, response) => {
+routes.post('/add_glucose/:id', async (request, response) => {
 
     const id = request.params.id;
     const { blood_glucoses } = request.body;
@@ -94,4 +93,4 @@ routes.delete('/:userId/delete/:bloodId', async (request, response) => {
     }
 });
 
-module.exports = app => app.use('/users', routes);
+module.exports = app => app.use('/user', routes);
