@@ -7,6 +7,8 @@ export const login = (token) => {
 
 export const logout = () => {
   localStorage.removeItem("user-token");
+  sessionStorage.removeItem("user-id");
+  sessionStorage.removeItem("blood-id");
 };
 
 export const setId = (userId) => {
@@ -14,3 +16,11 @@ export const setId = (userId) => {
 };
 
 export const getId = () => sessionStorage.getItem("user-id");
+
+export const setBloodId = (bloodId) => {
+  sessionStorage.setItem("blood-id", bloodId);
+};
+
+export const getBloodId = () => sessionStorage.getItem("blood-id");
+
+

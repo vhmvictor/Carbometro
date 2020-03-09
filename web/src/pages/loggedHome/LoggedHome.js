@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { logout } from '../../services/auth'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -7,35 +7,23 @@ import api from '../../services/api';
 import { getId } from '../../services/auth';
 
 import './LoggedHome.css'
+import { UpdateDeleteItem } from '../components/updatedeleteItem/UpdateDeleteItem'
+import { AddItem } from '../components/addItem/AddItem'
 
 const LoggedHome = () => {
 
     const [users, setUsers] = useState([]); //controle usuários
     const [glucoses, setGlucoses] = useState([]);
     const [value, setValue] = useState([]);
+    const [reflesh, setReflesh] = useState(false)
     const [redirect, setRedirect] = useState(false);
-
-    async function getUserId() {
-
-        const id = getId();
-
-        await api.get(`/user/${id}`)
-            .then(response => {
-                //console.log(response.data.user)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
-
-    getUserId()
 
     async function handleSubmitBlood(e) {
         e.preventDefault()
 
         const id = getId();
 
-        await api.post(`/user/add_glucose/${id}`, {
+        await api.post(`/user/${id}/add_glucose`, {
             blood_glucoses: [{ value }]
         })
             .then(response => {
@@ -47,14 +35,30 @@ const LoggedHome = () => {
             })
 
         setValue('');
+
+        setReflesh(true)
     }
 
-    async function handleShowBloods(e) {
-        e.preventDefault()
+    async function handleUpdateBlood(value, glucoseId) {
 
         const id = getId();
 
-        await api.get(`/user/searchGlucose/${id}`)
+        await api.put(`/user/${id}/update/${glucoseId}`, {value}) 
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+        setReflesh(true);
+    }
+
+    function handleDeleteBlood(glucoseId) {
+
+        const id = getId();
+
+        api.delete(`/user/${id}/delete/${glucoseId}`)
             .then(response => {
                 const bloods = response.data.blood_glucoses
                 setGlucoses(bloods);
@@ -62,7 +66,30 @@ const LoggedHome = () => {
             .catch(error => {
                 console.log(error)
             })
+
+        setReflesh(true)
     }
+
+    useEffect(() => {
+        async function handleShowBloods() {
+
+            const id = getId();
+
+            await api.get(`/user/searchGlucose/${id}`)
+                .then(response => {
+                    const bloods = response.data.blood_glucoses
+                    setGlucoses(bloods);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+
+        handleShowBloods()
+
+        setReflesh(false)
+
+    }, [reflesh]);
 
     async function handleLogout(e) {
         e.preventDefault()
@@ -88,46 +115,23 @@ const LoggedHome = () => {
                 </button>
                 </div>
             </header>
-            <div>
-                <div className="Login-title">
-                    <h1>Adicionar glicemia</h1>
-                </div>
-                <form onSubmit={handleSubmitBlood}>
-                    <div>
-                        <input
-                            placeholder="Glicemia *"
-                            className="Login-Field"
-                            name="blood_glucoses"
-                            id="blood_glucoses"
-                            required value={value}
-                            onChange={e => setValue(e.target.value)}
+            <div className="Logged-Home">
+                <AddItem
+                    handleAdd={handleSubmitBlood}
+                    onChange={(e) => setValue(e.target.value)}
+                    value={value}
+                />
+                <div className="Show-Glucoses">
+                    {glucoses.map(glucose => (
+                        <UpdateDeleteItem
+                            key={glucose._id}
+                            glucose={glucose}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            handleUpdateBlood={handleUpdateBlood}
+                            handleDeleteBlood={handleDeleteBlood}
                         />
-                    </div>
-                    <button className="Login-Btn" type="submit">Adicionar</button>
-                </form>
-                <div onClick={handleShowBloods}>
-                    <button className="Login-Btn" type="submit">Glicemias</button>
-                </div>
-                <div>
-                    {glucoses.map(glucose =>
-                        <div key={glucose._id}>
-                            <div>
-                                <strong>
-                                    {glucose.value}
-                                </strong>
-                            </div>
-                            <div>
-                                <strong>
-                                    {glucose._id}
-                                </strong>
-                            </div>
-                            <div>
-                                <strong>
-                                    {glucose.createdAt}
-                                </strong>
-                            </div>
-
-                        </div>)}
+                    ))}
                 </div>
             </div>
         </>

@@ -12,11 +12,23 @@ routes.use(authMiddleware);
 routes.get('/searchGlucose/:id', async (request, response) => {
     try {
         const blood_glucoses = await (await User.findById(request.params.id)).get('blood_glucoses');
-        
+
         return response.send({ blood_glucoses });
     } catch (err) {
         console.log(err);
-        return response.status(400).send({ error: 'Error loading User' });
+        return response.status(400).send({ error: 'Error loading glucoses' });
+    }
+});
+
+//lista ID glicemias do usuário logado 
+routes.get('/searchGlucoseId/:id', async (request, response) => {
+    try {
+        const blood_glucoses = await (await User.findById(request.params.id)).get('blood_glucoses._id');
+
+        return response.send({ blood_glucoses });
+    } catch (err) {
+        console.log(err);
+        return response.status(400).send({ error: 'Error loading glucoses' });
     }
 });
 
@@ -32,14 +44,14 @@ routes.get('/', async (request, response) => {
 });
 
 //Adiciona uma nova glicemia para o usuário logado 
-routes.post('/add_glucose/:id', async (request, response) => {
+routes.post('/:userId/add_glucose', async (request, response) => {
 
-    const id = request.params.id;
+    const userId = request.params.userId;
     const { blood_glucoses } = request.body;
 
     try {
 
-        const user = await User.findByIdAndUpdate(id, {
+        const user = await User.findByIdAndUpdate(userId, {
             $push: {
                 blood_glucoses: blood_glucoses
             }
@@ -53,21 +65,46 @@ routes.post('/add_glucose/:id', async (request, response) => {
     }
 
 });
+//lista uma glicemia do usuario logado pelo id
+routes.get('/:userId/showValue/:bloodId', async (request, response) => {
+    const userId = request.params.userId;
+    const bloodId = request.params.bloodId;
+    
+    try {
+        const glucoses = await (await User.findById(userId)).get('blood_glucoses');
+
+        const findByGlucoseId = glucoses.map(glucose => {
+            if (glucose.id == `${bloodId}`) {
+                return glucose.value
+            }
+        })
+        const filterNumber = findByGlucoseId.filter(function (el) {
+            return el != null;
+        });
+        const valueId = parseInt(filterNumber)
+
+        return response.json(valueId)
+
+    } catch (err) {
+        console.log(err);
+        return response.status(400).send({ error: 'Error loading glucose' });
+    }
+});
 
 //Altera glicemia do usuário logado 
 routes.put('/:userId/update/:bloodId', async (request, response) => {
     const userId = request.params.userId;
     const bloodId = request.params.bloodId;
     const { value } = request.body;
-    
+
     try {
 
         const user = await User.updateOne(
-            {_id: userId, 'blood_glucoses._id': bloodId},
-            {$set: {'blood_glucoses.$.value': value }}
-            
+            { _id: userId, 'blood_glucoses._id': bloodId },
+            { $set: { 'blood_glucoses.$.value': value } }
+
         );
-        
+
         return response.send(user);
 
     } catch (err) {
@@ -75,17 +112,18 @@ routes.put('/:userId/update/:bloodId', async (request, response) => {
         console.log(value);
         return response.status(400).send({ error: 'Error updating glucose' });
     }
-    
+
 });
 
 //Deleta uma glicemia do usuário logado 
 routes.delete('/:userId/delete/:bloodId', async (request, response) => {
 
     try {
-       const del = await User.findByIdAndUpdate(request.params.userId, {
-            $pull: { 'blood_glucoses': { _id: request.params.bloodId } } }, { multi: true }
-       )
-       return response.send(del);
+        const del = await User.findByIdAndUpdate(request.params.userId, {
+            $pull: { 'blood_glucoses': { _id: request.params.bloodId } }
+        }, { multi: true }
+        )
+        return response.send(del);
 
     } catch (err) {
         console.log(err);
