@@ -45,10 +45,10 @@
 
 .Show-Glucoses-Value {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 50px;
     margin-bottom: 30px;
     width: 480px;
-    color:  rgba(233, 72, 8, 0.959);
+    color:  rgb(121, 113, 113);
 }
 
 .ShowGlucoses-Btn {
