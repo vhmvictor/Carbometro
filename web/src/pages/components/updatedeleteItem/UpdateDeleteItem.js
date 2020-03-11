@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import moment from 'moment'
 
 import './UpdateDeleteItem.css'
 
@@ -32,11 +33,11 @@ export function UpdateDeleteItem({ glucose, handleUpdateBlood, handleDeleteBlood
                                 <div className="Item-Glucose-value">
                                     {glucose.updatedAt ? (
                                         <div className="updatedAt-value">
-                                            <strong> {glucose.updatedAt} </strong>
+                                            <strong>Editado: {moment(new Date (glucose.updatedAt)).format('D/MM - h:mm A')} </strong>
                                         </div>
                                     ) : (
                                         <div className="createdAt-value">
-                                            <strong> {glucose.createdAt} </strong>
+                                            <strong> {moment(new Date (glucose.createdAt)).format('D/MM - h:mm A')} </strong>
                                         </div>
                                         )}
                                     {glucose.value !== 100 && glucose.value !== 99 && glucose.value !== 101 && glucose.value !== 200 && glucose.value !== 300 && glucose.value !== 400 ? (

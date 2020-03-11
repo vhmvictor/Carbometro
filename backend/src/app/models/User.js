@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
             default: Date.now
         },
         updatedAt: { // metodo put
-            type: Date,
+            type: Date
         }
     }],
     unity: [{ 
@@ -53,7 +53,7 @@ const UserSchema = new mongoose.Schema({
         },
         updatedAt: {
             type: Date,
-            default: Date.now
+            default: Date
         }
     }],
     avatar_url: {

@@ -18,8 +18,20 @@
     color: white;
 }
 
+.Btn-logged-header {
+    display: flex;
+    margin-left: 1050px;
+}
+
+.Btn-config {
+    font-size: 25px;
+    margin-left: 40px;
+    color: white;
+    background-color:  rgba(233, 72, 8, 0.959);
+    border: none;
+}
+
 .Btn-logout {
-    margin-left: 150px;
     padding: 0;
     color: white;
     background-color:  rgba(233, 72, 8, 0.959);

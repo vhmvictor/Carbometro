@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { Button, Modal } from 'react-bootstrap';
 import { logout } from '../../services/auth'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import moment from 'moment'
 
 import api from '../../services/api';
 import { getId } from '../../services/auth';
@@ -17,6 +19,11 @@ const LoggedHome = () => {
     const [value, setValue] = useState([]);
     const [reflesh, setReflesh] = useState(false)
     const [redirect, setRedirect] = useState(false);
+
+    const [show, setShow] = useState(false);
+
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
 
     async function handleSubmitBlood(e) {
         e.preventDefault()
@@ -43,7 +50,7 @@ const LoggedHome = () => {
 
         const id = getId();
 
-        await api.put(`/user/${id}/update/${glucoseId}`, {value}) 
+        await api.put(`/user/${id}/update/${glucoseId}`, { value })
             .then(response => {
                 console.log(response);
             })
@@ -109,10 +116,33 @@ const LoggedHome = () => {
                         <h1>Carbometro</h1>
                     </Link>
                 </div>
-                <div className="Btn-header">
+                <div className="Btn-logged-header">
                     <button className="Btn-logout" onClick={handleLogout}>
                         Logout
-                </button>
+                    </button>
+                    <button className="Btn-config" onClick={handleShow}>
+                        <i class="material-icons" >build</i>
+                    </button>
+                    <div>
+                        <Modal show={show} onHide={handleClose}>
+                            <Modal.Header>
+                                <Modal.Title>
+                                    Dados pessoais
+                                </Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body className="bodyModal" >
+                                <h1 className="textModal" >teste</h1>
+                                <form>
+                                    <label htmlFor="">
+                                        <input type="text" placeholder="insira a sua unidade *" />
+                                    </label>
+                                </form>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="danger" onClick={handleClose} > Fechar </Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
                 </div>
             </header>
             <div className="Logged-Home">
@@ -122,6 +152,9 @@ const LoggedHome = () => {
                     value={value}
                 />
                 <div className="Show-Glucoses">
+                    <div className="Date-now">
+                        <strong> {moment(new Date(Date())).format('D/MM/YY')} </strong>
+                    </div>
                     {glucoses.map(glucose => (
                         <UpdateDeleteItem
                             key={glucose._id}

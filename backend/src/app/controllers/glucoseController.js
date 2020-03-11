@@ -99,17 +99,16 @@ routes.put('/:userId/update/:bloodId', async (request, response) => {
 
     try {
 
-        const now = new Date().toLocaleString('pt-BR', {
-            timeZone: "America/Sao_Paulo"
-        });
-
+        const now = new Date()
+        
         const user = await User.updateOne(
             { _id: userId, 'blood_glucoses._id': bloodId },
-            { $set: { 'blood_glucoses.$.value': value, 'blood_glucoses.$.updatedAt': now } }
+            { $set: { 'blood_glucoses.$.value': value, "blood_glucoses.$.updatedAt": now }}
 
         );
 
         return response.send(user);
+        
 
     } catch (err) {
         console.log(err);
