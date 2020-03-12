@@ -134,4 +134,45 @@ routes.delete('/:userId/delete/:bloodId', async (request, response) => {
     }
 });
 
+routes.post('/:userId/add_params', async (request, response) => {
+
+    const userId = request.params.userId;
+    const { breakfastCHO, 
+            lunchCHO, 
+            afternoonSnackCHO, 
+            dinnerCHO, 
+            born, 
+            weight, 
+            height, 
+            sexo, 
+            typeDm 
+    } = request.body;
+
+    try {
+
+        const user = await User.updateOne(
+            { _id: userId },
+            { $set: 
+                { 'breakfastCHO': breakfastCHO, 
+                  'lunchCHO': lunchCHO, 
+                  'afternoonSnackCHO': afternoonSnackCHO, 
+                  'dinnerCHO': dinnerCHO,
+                  'born': born,
+                  'weight': weight,
+                  'height': height,
+                  'sexo': sexo,
+                  'typeDm': typeDm
+            }}
+
+        );
+
+        return response.send({ user });
+    }
+    catch (err) {
+        console.log(err)
+        return response.status(400).send({ error: 'Error creating params' });
+    }
+
+});
+
 module.exports = app => app.use('/user', routes);

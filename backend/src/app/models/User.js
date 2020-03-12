@@ -52,16 +52,9 @@ const UserSchema = new mongoose.Schema({
             default: Date.now
         },
         updatedAt: {
-            type: Date,
-            default: Date
+            type: Date
         }
     }],
-    avatar_url: {
-        type: String,
-    },
-    phone: {
-        type: Number,
-    },
     born: {
         type: Date,
     },
@@ -70,6 +63,24 @@ const UserSchema = new mongoose.Schema({
     },
     height: {
         type: Number,
+    },
+    sexo: {
+        type: String
+    },
+    typeDm: {
+        type: String
+    },
+    breakfastCHO: {
+        type: Number
+    },
+    lunchCHO: {
+        type: Number
+    },
+    afternoonSnackCHO: {
+        type: Number
+    },
+    dinnerCHO: {
+        type: Number
     }
 });
 

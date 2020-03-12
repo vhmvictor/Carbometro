@@ -3,14 +3,9 @@
     width: 480px;
 }
 
-.Logged-page {
-    width: 1600px;
-}
-
 .Logged-header {
     width: auto;
     display: flex;
-    align-items: center;
     background-color: rgba(233, 72, 8, 0.959);
 }
 
@@ -20,7 +15,7 @@
 
 .Btn-logged-header {
     display: flex;
-    margin-left: 1050px;
+    margin-left: 1050px
 }
 
 .Btn-config {
@@ -40,6 +35,14 @@
 
 .Btn-logout:hover {
     cursor: pointer;
+}
+
+.ModalSave-Btn {
+    padding: 8px;
+    width: 100px;
+    background: rgba(233, 72, 8, 0.959);
+    color: white;
+    border: none;
 }
 
 .AddGlucose {

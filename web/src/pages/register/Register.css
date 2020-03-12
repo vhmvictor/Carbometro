@@ -10,7 +10,7 @@
 }
 
 .Register-header {
-    width: 1600px;
+    width: auto;
     display: flex;
     align-items: center;
     background-color: rgba(233, 72, 8, 0.959);
