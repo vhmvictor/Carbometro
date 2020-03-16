@@ -81,6 +81,12 @@ const UserSchema = new mongoose.Schema({
     },
     dinnerCHO: {
         type: Number
+    },
+    fc: {
+        type: Number
+    },
+    glucoseTarget: {
+        type: Number
     }
 });
 

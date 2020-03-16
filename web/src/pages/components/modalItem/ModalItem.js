@@ -4,34 +4,55 @@ import './ModalItem.css'
 import { Button, Modal } from 'react-bootstrap';
 import { TabContent, TabPane, Nav, NavItem } from 'reactstrap';
 import classnames from 'classnames';
+import api from '../../../services/api';
+import { getId } from '../../../services/auth';
 
-export function ModalItem({
-    show,
-    handleClose,
-    handleSubmitParams,
-    onChangeBor,
-    onChangeW,
-    onChangeH,
-    onChangeS,
-    onChangeT,
-    onChangeB,
-    onChangeL,
-    onChangeA,
-    onChangeD,
-    born,
-    weight,
-    height,
-    sexo,
-    typeDm,
-    breakfastCHO,
-    lunchCHO,
-    afternoonSnackCHO,
-    dinnerCHO
-}) {
+export function ModalItem ({ show, setShow, handleClose }) {
+
+    const [breakfastCHO, setBreakfastCHO] = useState('');
+    const [lunchCHO, setLunchCHO] = useState('');
+    const [afternoonSnackCHO, setAfternoonSnackCHO] = useState('');
+    const [dinnerCHO, setDinnerCHO] = useState('');
+    const [born, setBorn] = useState('');
+    const [weight, setWeight] = useState('');
+    const [height, setHeight] = useState('');
+    const [sexo, setSexo] = useState('');
+    const [typeDm, setTypeDm] = useState('');
+    const [fc, setFc] = useState('');
+    const [glucoseTarget, setGlucoseTarget] = useState('');
     const [activeTab, setActiveTab] = useState('1'); //seta tab inicial a primeira
 
     const toggle = tab => {
         if (activeTab !== tab) setActiveTab(tab); //função para alternar entre as tabs
+    }
+
+    async function handleSubmitParams(e) {
+        e.preventDefault()
+
+        const id = getId();
+
+        await api.post(`/user/${id}/add_params`,
+            {
+                breakfastCHO,
+                lunchCHO,
+                afternoonSnackCHO,
+                dinnerCHO,
+                born,
+                weight,
+                height,
+                sexo,
+                typeDm,
+                fc,
+                glucoseTarget
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+        setShow(false)
     }
 
     return (
@@ -64,7 +85,7 @@ export function ModalItem({
                         <TabPane tabId="1">
                             <h4 className="textModal" >Insira seus dados pessoais</h4>
                             <form onSubmit={handleSubmitParams}>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Data nasc:
                                         <input
@@ -73,11 +94,11 @@ export function ModalItem({
                                             name="born"
                                             id="born"
                                             required value={born}
-                                            onChange={onChangeBor}
+                                            onChange={(e) => setBorn(e.target.value)}
                                         />
                                     </label>
                                 </div>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Peso:
                                         <input
@@ -86,11 +107,11 @@ export function ModalItem({
                                             name="weight"
                                             id="weight"
                                             required value={weight}
-                                            onChange={onChangeW}
+                                            onChange={(e) => setWeight(e.target.value)}
                                         />
                                     </label>
                                 </div>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Altura:
                                         <input
@@ -99,24 +120,24 @@ export function ModalItem({
                                             name="height"
                                             id="height"
                                             required value={height}
-                                            onChange={onChangeH}
+                                            onChange={(e) => setHeight(e.target.value)}
                                         />
                                     </label>
                                 </div>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Sexo:
-                                        <select className="ModalItem-Field" value={sexo} onChange={onChangeS}>
+                                        <select className="ModalItem-Field" value={sexo} onChange={(e) => setSexo(e.target.value)}>
                                             <option value=""> Selecione </option>
                                             <option value="masculino"> Masculino </option>
                                             <option value="feminino"> Feminino </option>
                                         </select>
                                     </label>
                                 </div>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Tipo de diabetes:
-                                        <select className="ModalItem-Field" value={typeDm} onChange={onChangeT}>
+                                        <select className="ModalItem-Field" value={typeDm} onChange={(e) => setTypeDm(e.target.value)}>
                                             <option value=""> Selecione </option>
                                             <option value="dm1"> Tipo 1 </option>
                                             <option value="dm2"> Tipo 2 </option>
@@ -130,7 +151,7 @@ export function ModalItem({
                         <TabPane tabId="2">
                         <h4 className="textModal" >Insira seus parâmetros para Bolus</h4>
                             <form onSubmit={handleSubmitParams}>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Café da manhã (Bolus):
                                         <input
@@ -139,11 +160,11 @@ export function ModalItem({
                                             name="breakfastCHO"
                                             id="breakfastCHO"
                                             required value={breakfastCHO}
-                                            onChange={onChangeB}
+                                            onChange={(e) => setBreakfastCHO(e.target.value)}
                                         />
                                     </label>
                                 </div>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Almoço (Bolus):
                                         <input
@@ -152,11 +173,11 @@ export function ModalItem({
                                             name="lunchCHO"
                                             id="lunchCHO"
                                             required value={lunchCHO}
-                                            onChange={onChangeL}
+                                            onChange={(e) => setLunchCHO(e.target.value)}
                                         />
                                     </label>
-                                </div>
-                                <div>
+                                </div> 
+                                <div className="ModalLabel">
                                     <label>
                                         Lanche da tarde (Bolus):
                                         <input
@@ -165,11 +186,11 @@ export function ModalItem({
                                             name="afternoonSnackCHO"
                                             id="afternoonSnackCHO"
                                             required value={afternoonSnackCHO}
-                                            onChange={onChangeA}
+                                            onChange={(e) => setAfternoonSnackCHO(e.target.value)}
                                         />
                                     </label>
                                 </div>
-                                <div>
+                                <div className="ModalLabel">
                                     <label>
                                         Jantar (Bolus):
                                         <input
@@ -178,7 +199,33 @@ export function ModalItem({
                                             name="dinnerCHO"
                                             id="dinnerCHO"
                                             required value={dinnerCHO}
-                                            onChange={onChangeD}
+                                            onChange={(e) => setDinnerCHO(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+                                <div className="ModalLabel">
+                                    <label>
+                                        Fator de correção:
+                                        <input
+                                            placeholder="fator de correção"
+                                            className="ModalItem-Field"
+                                            name="fator de correção"
+                                            id="fator de correção"
+                                            required value={fc}
+                                            onChange={(e) => setFc(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+                                <div className="ModalLabel">
+                                    <label>
+                                        Glicemia alvo:
+                                        <input
+                                            placeholder="glicemia alvo"
+                                            className="ModalItem-Field"
+                                            name="glucoseTarget"
+                                            id="glucoseTarget"
+                                            required value={glucoseTarget}
+                                            onChange={(e) => setGlucoseTarget(e.target.value)}
                                         />
                                     </label>
                                 </div>

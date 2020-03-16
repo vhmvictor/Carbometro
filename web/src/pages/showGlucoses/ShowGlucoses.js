@@ -3,16 +3,36 @@ import { logout } from '../../services/auth'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import './LoggedHome.css'
+import api from '../../services/api';
+import { getId } from '../../services/auth';
+
+import { UpdateDeleteItem } from '../components/updatedeleteItem/UpdateDeleteItem'
 import { ModalItem } from '../components/modalItem/ModalItem'
 
-const LoggedHome = () => {
+const ShowGlucoses = () => {
     
+    const [glucoses, setGlucoses] = useState([]);
     const [redirect, setRedirect] = useState(false);
     const [show, setShow] = useState(false);
-
+    
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    async function handleLoadBloods() {
+
+        const id = getId();
+
+        await api.get(`/user/searchGlucose/${id}`)
+            .then(response => {
+                const bloods = response.data.blood_glucoses
+                setGlucoses(bloods);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    handleLoadBloods()
 
     async function handleLogout(e) {
         e.preventDefault()
@@ -28,7 +48,7 @@ const LoggedHome = () => {
         <>
             <header className="Logged-header">
                 <div className="Carb-title">
-                    <Link to="/" style={{ textDecoration: 'none' }}>
+                    <Link to="/home" style={{ textDecoration: 'none' }}>
                         <h1>Carbometro</h1>
                     </Link>
                 </div>
@@ -48,20 +68,24 @@ const LoggedHome = () => {
                     </div>
                 </div>
             </header>
-            <div className="Logged-Home-Functions">
-                <Link to="/home/add_glucoses" style={{ color: 'white' }}>
-                    <button className="Redirect-Btn">
-                        <h1>Nova refeição</h1>
-                    </button>
-                </Link>
-                <Link to="/home/show_glucoses" style={{ color: 'white' }}>
-                    <button className="Redirect-Btn">
-                        <h1>Relatório de glicemias</h1>
-                    </button>
+            <div className="Logged-Home">
+                <div className="Show-Glucoses">
+                    {glucoses.map(glucose => (
+                        <UpdateDeleteItem
+                            key={glucose._id}
+                            glucose={glucose}
+                            setGlucoses={setGlucoses}
+                        />
+                    ))}
+                </div>
+            </div>
+            <div className="Logged-Home">
+                <Link to="/home" style={{ color: 'white' }}>
+                    <button>Voltar</button>
                 </Link>
             </div>
         </>
     )
 }
 
-export default LoggedHome
+export default ShowGlucoses

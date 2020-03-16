@@ -53,7 +53,10 @@ routes.post('/:userId/add_glucose', async (request, response) => {
 
         const user = await User.findByIdAndUpdate(userId, {
             $push: {
-                blood_glucoses: blood_glucoses
+                blood_glucoses: {
+                    $each: blood_glucoses,
+                    $position: 0
+                }
             }
         });
 
@@ -145,7 +148,9 @@ routes.post('/:userId/add_params', async (request, response) => {
             weight, 
             height, 
             sexo, 
-            typeDm 
+            typeDm,
+            fc,
+            glucoseTarget
     } = request.body;
 
     try {
@@ -161,7 +166,9 @@ routes.post('/:userId/add_params', async (request, response) => {
                   'weight': weight,
                   'height': height,
                   'sexo': sexo,
-                  'typeDm': typeDm
+                  'typeDm': typeDm,
+                  'fc': fc,
+                  'glucoseTarget': glucoseTarget
             }}
 
         );

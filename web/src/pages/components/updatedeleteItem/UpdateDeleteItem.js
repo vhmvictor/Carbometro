@@ -1,11 +1,42 @@
 import React, { useState } from 'react';
 import moment from 'moment'
+import api from '../../../services/api';
+import { getId } from '../../../services/auth';
 
 import './UpdateDeleteItem.css'
 
-export function UpdateDeleteItem({ glucose, handleUpdateBlood, handleDeleteBlood }) {
+export function UpdateDeleteItem({ glucose, setGlucoses }) {
     const [editando, setEditando] = useState(false);
     const [value, setValue] = useState(glucose.value);
+
+    async function handleUpdateBlood(value, glucoseId) {
+
+        const id = getId();
+
+        await api.put(`/user/${id}/update/${glucoseId}`, { value })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+    }
+
+    function handleDeleteBlood(glucoseId) {
+
+        const id = getId();
+
+        api.delete(`/user/${id}/delete/${glucoseId}`)
+            .then(response => {
+                const bloods = response.data.blood_glucoses
+                setGlucoses(bloods);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+    }
 
     const handleEdit = () => {
 
@@ -13,10 +44,6 @@ export function UpdateDeleteItem({ glucose, handleUpdateBlood, handleDeleteBlood
             handleUpdateBlood(value, glucose._id);
         }
         setEditando(prevStateEdit => !prevStateEdit);
-    };
-
-    const handleDelete = () => {
-        handleDeleteBlood(glucose._id)
     };
 
     return (
@@ -120,7 +147,7 @@ export function UpdateDeleteItem({ glucose, handleUpdateBlood, handleDeleteBlood
                                 <i className="fas fa-check"></i>
                             </button>
                         )}
-                    <button className="btn-delete" onClick={() => handleDelete()}>
+                    <button className="btn-delete" onClick={() => handleDeleteBlood(glucose._id)}>
                         <i className="fas fa-trash-alt"></i>
                     </button>
                 </div>

@@ -11,7 +11,8 @@ import LoggedHome from '../pages/loggedHome'
 import PrivateRoute from './PrivateRoute'
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword'
 import ResetPassword from '../pages/resetPassword/ResetPassword'
-
+import ShowGlucoses from '../pages/showGlucoses/ShowGlucoses'
+import AddGlucoses from '../pages/addGlucoses/AddGlucoses'
 
 const Routes = () => (
     <BrowserRouter >
@@ -22,6 +23,8 @@ const Routes = () => (
             <Route component={ForgotPassword} exact path="/forgot_password"/>
             <Route component={ResetPassword} exact path="/reset_password"/>
             <PrivateRoute component={LoggedHome} exact path="/home"/>
+            <PrivateRoute component={ShowGlucoses} exact path="/home/show_glucoses"/>
+            <PrivateRoute component={AddGlucoses} exact path="/home/add_glucoses"/>
             <Route component={NotFound}/>
         </Switch>
     </BrowserRouter>
