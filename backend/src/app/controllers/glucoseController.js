@@ -1,8 +1,10 @@
-//const express = require('express');
+const { Router } = require('express');
+const axios = require('axios');
+
 const authMiddleware = require('../middlewares/auth');
 const User = require('../models/User');
 
-const { Router } = require('express');
+const getParams = require('../utils/CalculateUnity');
 
 const routes = Router();
 
@@ -43,7 +45,62 @@ routes.get('/', async (request, response) => {
     }
 });
 
+routes.post('/:userId/add_newFood', async (request, response) => {
+
+    const userId = request.params.userId;
+
+    const { value, carbTotal, foodType } = request.body;
+
+    const apiResponse = await axios.get(`http://localhost:3333/user/${userId}`);
+
+    const { fc, glucoseTarget } = apiResponse.data.user;
+
+    try {
+
+        const user = await User.findByIdAndUpdate(userId, {
+
+            $push: {
+                blood_glucoses: {
+                    $each: [{ value }],
+                    $position: 0
+                }
+            }
+        })
+
+        if (foodType === "breakfastCHO") {
+            const { breakfastCHO } = apiResponse.data.user;
+            const bolusTotal = getParams(value, carbTotal, breakfastCHO, fc, glucoseTarget);
+            return response.json(bolusTotal);
+        } else if (foodType === "lunchCHO") {
+            const { lunchCHO } = apiResponse.data.user;
+            const bolusTotal = getParams(value, carbTotal, lunchCHO, fc, glucoseTarget);
+            console.log(bolusTotal);
+            return response.json(bolusTotal);
+        } else if (foodType === "afternoonSnackCHO") {
+            const { afternoonSnackCHO } = apiResponse.data.user;
+            const bolusTotal = getParams(value, carbTotal, afternoonSnackCHO, fc, glucoseTarget);
+            console.log(bolusTotal);
+            return response.json(bolusTotal);
+        } else if (foodType === "dinnerCHO") {
+            const { dinnerCHO } = apiResponse.data.user;
+            const bolusTotal = getParams(value, carbTotal, dinnerCHO, fc, glucoseTarget);
+            console.log(bolusTotal);
+            return response.json(bolusTotal);
+        }
+        console.log('deu certo')
+
+    } catch (err) {
+        console.log('deu erro')
+        console.log(err)
+
+        return response.status(400).send({ error: 'Error creating new food' });
+    }
+
+});
+
+
 //Adiciona uma nova glicemia para o usuário logado 
+/*
 routes.post('/:userId/add_glucose', async (request, response) => {
 
     const userId = request.params.userId;
@@ -68,6 +125,8 @@ routes.post('/:userId/add_glucose', async (request, response) => {
     }
 
 });
+*/
+
 //lista uma glicemia do usuario logado pelo id
 routes.get('/:userId/showValue/:bloodId', async (request, response) => {
     const userId = request.params.userId;

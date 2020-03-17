@@ -37,7 +37,7 @@ const LoggedHome = () => {
                         Logout
                     </button>
                     <button className="Btn-config" onClick={handleShow}>
-                        <i class="material-icons" >build</i>
+                        <i className="material-icons" >build</i>
                     </button>
                     <div>
                         <ModalItem

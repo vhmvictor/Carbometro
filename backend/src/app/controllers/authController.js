@@ -7,7 +7,11 @@ const mailer = require('../../modules/mailer'); //lib para envio de email
 const authConfig = require('../../config/auth');
 const authMiddleware = require('../middlewares/auth');
 
+const getFoods = require('../../app/utils/ImportFoods')
+const Food = require('../models/Food');
+
 const User = require('../models/User');
+
 
 const { Router } = require('express');
 
@@ -152,5 +156,30 @@ routes.post('/reset_password', async (request, response) => {
         response.status(400).send({ error: " Cannot reset password, try again " });
     }
 });
+
+
+routes.get('/AddBdFoods', async (request, response) => {
+
+    try {
+
+        const getF = await getFoods();
+
+        getF.map(item => {
+            console.log(item)
+        })
+
+        const CreateFoods = await Food.create(getF);
+
+        return response.json({CreateFoods})
+    }
+    catch (err) {
+        console.log(err)
+        return response.json({ err: "falha na busca dos alimentos" })
+
+    }
+    
+
+});
+
 
 module.exports = app => { app.use('/auth', authRoutes), app.use('/', routes) }

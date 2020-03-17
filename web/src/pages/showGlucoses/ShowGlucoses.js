@@ -57,7 +57,7 @@ const ShowGlucoses = () => {
                         Logout
                     </button>
                     <button className="Btn-config" onClick={handleShow}>
-                        <i class="material-icons" >build</i>
+                        <i className="material-icons" >build</i>
                     </button>
                     <div>
                         <ModalItem
@@ -78,11 +78,6 @@ const ShowGlucoses = () => {
                         />
                     ))}
                 </div>
-            </div>
-            <div className="Logged-Home">
-                <Link to="/home" style={{ color: 'white' }}>
-                    <button>Voltar</button>
-                </Link>
             </div>
         </>
     )
