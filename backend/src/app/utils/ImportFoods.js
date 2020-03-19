@@ -5,7 +5,7 @@ const tabela = [];
 module.exports = getFoods = function() {
     return new Promise(function (resolve, reject){
 
-        CSVToJSON().fromFile('./base.csv').then(base => {
+        CSVToJSON().fromFile('./baseCerta.csv').then(base => {
             base.map(item => {
                 tabela.push(item)
             })

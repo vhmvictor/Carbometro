@@ -21,3 +21,28 @@
     width: 350px;
     transition: all .1s linear;
 }
+
+.AddGlucose {
+    text-align: center;
+}
+
+.AddGlucose-Btn {
+    margin-top: 30px;
+    padding: 15px;
+    width: 350px;
+    background:  rgba(233, 72, 8, 0.959);
+    color: white;
+    border: none;
+}
+
+.SearchFood-Btn {
+    padding: 8px;
+    width: 100px;
+    color:black;
+    border: none;
+}
+
+.Table {
+    margin: 50px auto 0px;
+    width: 500px;
+}

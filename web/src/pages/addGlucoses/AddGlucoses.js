@@ -69,7 +69,7 @@ const AddGlucoses = () => {
                     </div>
                 </div>
             </header>
-            <div className="Logged-Home">
+            <div>
                 <AddItem
                     glucose={glucoses}
                 />

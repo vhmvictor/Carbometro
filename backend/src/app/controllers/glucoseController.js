@@ -70,21 +70,26 @@ routes.post('/:userId/add_newFood', async (request, response) => {
         if (foodType === "breakfastCHO") {
             const { breakfastCHO } = apiResponse.data.user;
             const bolusTotal = getParams(value, carbTotal, breakfastCHO, fc, glucoseTarget);
+            console.log(bolusTotal)
+            console.log(carbTotal)
             return response.json(bolusTotal);
         } else if (foodType === "lunchCHO") {
             const { lunchCHO } = apiResponse.data.user;
             const bolusTotal = getParams(value, carbTotal, lunchCHO, fc, glucoseTarget);
             console.log(bolusTotal);
+            console.log(carbTotal)
             return response.json(bolusTotal);
         } else if (foodType === "afternoonSnackCHO") {
             const { afternoonSnackCHO } = apiResponse.data.user;
             const bolusTotal = getParams(value, carbTotal, afternoonSnackCHO, fc, glucoseTarget);
             console.log(bolusTotal);
+            console.log(carbTotal)
             return response.json(bolusTotal);
         } else if (foodType === "dinnerCHO") {
             const { dinnerCHO } = apiResponse.data.user;
             const bolusTotal = getParams(value, carbTotal, dinnerCHO, fc, glucoseTarget);
             console.log(bolusTotal);
+            console.log(carbTotal)
             return response.json(bolusTotal);
         }
         console.log('deu certo')

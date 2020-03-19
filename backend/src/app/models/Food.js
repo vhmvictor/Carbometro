@@ -5,7 +5,11 @@ const FoodSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    gram: {
+    measure: {
+        type: String,
+        required: true
+    },
+    unitGram: {
         type: Number,
         required: true
     },

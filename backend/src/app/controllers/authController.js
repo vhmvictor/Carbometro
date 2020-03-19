@@ -168,9 +168,9 @@ routes.get('/AddBdFoods', async (request, response) => {
             console.log(item)
         })
 
-        const CreateFoods = await Food.create(getF);
+        const CreateFds = await Food.create(getF);
 
-        return response.json({CreateFoods})
+        return response.json({CreateFds})
     }
     catch (err) {
         console.log(err)
@@ -181,5 +181,22 @@ routes.get('/AddBdFoods', async (request, response) => {
 
 });
 
+routes.get('/SearchFoods', async (request, response) => {
+    try {
+
+        const queryParams = request.query
+        //console.log(Object.values(queryParams))
+        const foods = await Food.findOne(queryParams);
+        if(Object.values(queryParams) == foods.get('name')){
+            console.log('Alimento encontrado')
+        }
+
+        return response.send( foods );
+
+    } catch (err) {
+        console.log(err);
+        return response.status(400).send({ error: 'Error loading User' });
+    }
+})
 
 module.exports = app => { app.use('/auth', authRoutes), app.use('/', routes) }

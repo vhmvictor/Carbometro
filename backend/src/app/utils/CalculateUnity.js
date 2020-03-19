@@ -9,6 +9,8 @@ module.exports = function getParams(glicemia, carbTotal, bolusRefeicao, fc, glic
     const bolusAlimento = (cTotal / bRefeicao);
 
     const correcao = ((glucose - gAlvo) / ftC);
+    console.log(correcao)
+    console.log(bolusAlimento)
 
     const bolusTotal = (bolusAlimento + correcao);
 

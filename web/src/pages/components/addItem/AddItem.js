@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import api from '../../../services/api';
 import { getId } from '../../../services/auth';
 
@@ -8,6 +8,9 @@ export function AddItem({ glucose }) {
 
     const [users, setUsers] = useState([]); //controle usuários
     const [value, setValue] = useState(glucose.value);
+    const [foods, setFoods] = useState([]);
+    const [showFood, setShowFood] = useState(false);
+    const [foodTarget, setFoodTarget] = useState('');
 
     const [carbTotal, setCarbTotal] = useState('');
     const [foodType, setFoodType] = useState(String);
@@ -32,38 +35,52 @@ export function AddItem({ glucose }) {
 
         setValue('');
 
-        setCarbTotal('');
-
-
     }
-/*
-    async function handleSubmitBlood(e) {
-        e.preventDefault()
+    /*
+        async function handleSubmitBlood(e) {
+            e.preventDefault()
+    
+            const id = getId();
+    
+            await api.post(`/user/${id}/add_glucose`, {
+                blood_glucoses: [{ value }]
+            })
+                .then(response => {
+                    setUsers([...users, response.data]); //controle de acesso
+                    console.log(response.data.user)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+    
+            setValue('');
+    
+        }
+    */
 
-        const id = getId();
+    async function handleSearchFood(fTarget) {
 
-        await api.post(`/user/${id}/add_glucose`, {
-            blood_glucoses: [{ value }]
-        })
+        await api.get(`SearchFoods?name=${fTarget}`)
             .then(response => {
-                setUsers([...users, response.data]); //controle de acesso
-                console.log(response.data.user)
+                setFoods(response.data)
             })
             .catch(error => {
                 console.log(error)
             })
-
-        setValue('');
-
+        setShowFood(true)
     }
-*/
+
+    useEffect(() => {
+        console.log(foods)
+        setCarbTotal(foods.cho)
+    }, [foods])
 
     return (
         <>
             <div className="AddItem-title">
                 <h1>Adicionar nova refeição</h1>
             </div>
-            <form onSubmit={handleAddNewFood}>
+            <form>
                 <div className="AddItem-body">
                     <label>
                         Tipo da Refeição:
@@ -91,21 +108,48 @@ export function AddItem({ glucose }) {
                 </div>
                 <div className="AddItem-body">
                     <label>
-                        CHO Total da Refeição:
+                        Buscar alimento:
                         <input
-                            placeholder="Carb Total (g)"
+                            placeholder="informe um alimento..."
                             className="AddItem-Field"
-                            name="carb_total"
-                            id="carb_total"
-                            required value={carbTotal}
-                            onChange={(e) => setCarbTotal(e.target.value)}
+                            name="food"
+                            id="food"
+                            required value={foodTarget}
+                            onChange={(e) => setFoodTarget(e.target.value)}
                         />
                     </label>
                 </div>
-                <div className="AddGlucose">
-                    <button className="AddGlucose-Btn" type="submit">Adicionar</button>
-                </div>
             </form>
+            <div className="AddGlucose">
+                <button className="SearchFood-Btn" onClick={() => handleSearchFood(foodTarget)}>
+                    Buscar
+                </button>
+            </div>
+                {showFood ? (
+                <div className="Table">
+                    <table className="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style={{textAlign: 'center', fontSize:18, backgroundColor:'rgba(233, 72, 8, 0.959)'}}>Nome</th>
+                                <th style={{textAlign: 'center', fontSize:18, backgroundColor:'rgba(233, 72, 8, 0.959)'}}>Medida</th>
+                                <th style={{textAlign: 'center', fontSize:18, backgroundColor:'rgba(233, 72, 8, 0.959)'}}>g ou ml</th>
+                                <th style={{textAlign: 'center', fontSize:18, backgroundColor:'rgba(233, 72, 8, 0.959)'}}>CHO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style={{textAlign: 'center', backgroundColor:'rgba(223, 221, 221, 0.959)'}}>
+                                <td>{foods.name}</td><td>{foods.measure}</td><td>{foods.unitGram}</td><td>{foods.cho}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                ) : ('')}
+            
+            <div className="AddGlucose">
+                <form onSubmit={handleAddNewFood}>
+                    <button className="AddGlucose-Btn" type="submit">Adicionar refeição</button>
+                </form>
+            </div>
         </>
     )
 }
