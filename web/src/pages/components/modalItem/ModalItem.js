@@ -20,6 +20,8 @@ export function ModalItem ({ show, setShow, handleClose }) {
     const [typeDm, setTypeDm] = useState('');
     const [fc, setFc] = useState('');
     const [glucoseTarget, setGlucoseTarget] = useState('');
+    const [minTargetRange, setMinTargetRange] = useState('');
+    const [maxTargetRange, setMaxTargetRange] = useState('');
     const [activeTab, setActiveTab] = useState('1'); //seta tab inicial a primeira
 
     const toggle = tab => {
@@ -43,7 +45,9 @@ export function ModalItem ({ show, setShow, handleClose }) {
                 sexo,
                 typeDm,
                 fc,
-                glucoseTarget
+                glucoseTarget,
+                minTargetRange,
+                maxTargetRange
             })
             .then(response => {
                 console.log(response);
@@ -226,6 +230,31 @@ export function ModalItem ({ show, setShow, handleClose }) {
                                             id="glucoseTarget"
                                             required value={glucoseTarget}
                                             onChange={(e) => setGlucoseTarget(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+                                <div className="ModalLabel">
+                                    <label>
+                                        Faixa de glicemia alvo:
+                                        <input
+                                            placeholder="De"
+                                            className="ModalItem-Field"
+                                            name="minTargetRange"
+                                            id="minTargetRange"
+                                            required value={minTargetRange}
+                                            onChange={(e) => setMinTargetRange(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+                                <div className="ModalLabel">
+                                    <label>
+                                        <input
+                                            placeholder="Até"
+                                            className="ModalItem-Field"
+                                            name="maxTargetRange"
+                                            id="maxTargetRange"
+                                            required value={maxTargetRange}
+                                            onChange={(e) => setMaxTargetRange(e.target.value)}
                                         />
                                     </label>
                                 </div>

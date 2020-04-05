@@ -8,31 +8,37 @@ import { getId } from '../../services/auth';
 
 import { UpdateDeleteItem } from '../components/updatedeleteItem/UpdateDeleteItem'
 import { ModalItem } from '../components/modalItem/ModalItem'
+import { useEffect } from 'react';
 
 const ShowGlucoses = () => {
-    
-    const [glucoses, setGlucoses] = useState([]);
+
+    const [foods, setFoods] = useState([]);
     const [redirect, setRedirect] = useState(false);
     const [show, setShow] = useState(false);
-    
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    async function handleLoadBloods() {
+    useEffect(() => {
 
-        const id = getId();
+        async function handleLoadFoods() {
 
-        await api.get(`/user/searchGlucose/${id}`)
-            .then(response => {
-                const bloods = response.data.blood_glucoses
-                setGlucoses(bloods);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
+            const id = getId();
 
-    handleLoadBloods()
+            await api.get(`/user/searchAddFoods/${id}`)
+                .then(response => {
+                    const food = response.data.addFoods
+                    console.log(food)
+                    setFoods(food);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+
+        handleLoadFoods()
+
+    }, [])
 
     async function handleLogout(e) {
         e.preventDefault()
@@ -68,17 +74,30 @@ const ShowGlucoses = () => {
                     </div>
                 </div>
             </header>
-            <div className="Logged-Home">
-                <div className="Show-Glucoses">
-                    {glucoses.map(glucose => (
-                        <UpdateDeleteItem
-                            key={glucose._id}
-                            glucose={glucose}
-                            setGlucoses={setGlucoses}
-                        />
-                    ))}
-                </div>
-            </div>
+            <>
+                {foods.map((item) =>
+                    <>
+                        {<UpdateDeleteItem
+                            key={item._id}
+                            glucose={item}
+                            foodName={item.food.map((fd) => {
+                                return fd.name
+                            })}
+                            foodMeasure={item.food.map((fd) => {
+                                return fd.measure
+                            })}
+                            foodAddGram={item.food.map((fd) => {
+                                return fd.addGram
+                            })}
+                            foodChoCal={item.food.map((fd) => {
+                                return fd.choCal
+                            })}
+                            setFoods={setFoods}
+                            foodId={item._id}
+                        />}
+                    </>
+                )}
+            </>
         </>
     )
 }

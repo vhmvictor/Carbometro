@@ -157,7 +157,7 @@ routes.post('/reset_password', async (request, response) => {
     }
 });
 
-
+//importando base de dados
 routes.get('/AddBdFoods', async (request, response) => {
 
     try {
@@ -198,5 +198,13 @@ routes.get('/SearchFoods', async (request, response) => {
         return response.status(400).send({ error: 'Error loading User' });
     }
 })
+
+routes.get('/food', async (request, response) => {
+
+    const foods = await Food.find();
+
+    return response.json( foods )
+
+});
 
 module.exports = app => { app.use('/auth', authRoutes), app.use('/', routes) }

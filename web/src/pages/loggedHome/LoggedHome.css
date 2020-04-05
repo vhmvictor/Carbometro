@@ -1,14 +1,14 @@
 .Logged-Home {
     margin: 0 auto;
-    width: 480px;
+    width: 900 px;
 }
 
 .Logged-Home-Functions {
-    margin-top: 150px;
+    margin: 150px 550px;
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: auto;
+    width: 200px;
 }
 
 .Logged-Home-Functions h1 {
@@ -25,7 +25,7 @@
 .Logged-header {
     width: auto;
     display: flex;
-    background-color: rgba(233, 72, 8, 0.959);
+    background-color: rgba(240, 75, 10, 0.673);
 }
 
 .Logged h1 {
@@ -41,14 +41,14 @@
     font-size: 25px;
     margin-left: 40px;
     color: white;
-    background-color:  rgba(233, 72, 8, 0.959);
+    background-color:  rgba(228, 80, 22, 0);
     border: none;
 }
 
 .Btn-logout {
     padding: 0;
     color: white;
-    background-color:  rgba(233, 72, 8, 0.959);
+    background-color:  rgba(240, 75, 10, 0);
     border: none;
 }
 
@@ -56,7 +56,7 @@
     padding: 20px;
     margin-bottom: 20px;
     width: 400px;
-    background:  rgba(233, 72, 8, 0.959);
+    background:  rgba(240, 75, 10, 0.673);
     color: white;
     border: none;
 }
@@ -80,25 +80,6 @@
 .AddGlucose-Btn {
     padding: 8px;
     width: 100px;
-    background:  rgba(233, 72, 8, 0.959);
-    color: white;
-    border: none;
-}
-
-.Show-Glucoses-Value {
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 30px;
-    width: 480px;
-    color:  rgb(121, 113, 113);
-}
-
-.ShowGlucoses-Btn {
-    margin-right: 220px;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    padding: 8px;
-    width: 150px;
     background:  rgba(233, 72, 8, 0.959);
     color: white;
     border: none;

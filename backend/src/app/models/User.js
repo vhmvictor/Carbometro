@@ -29,8 +29,33 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now // pega a data de criação
     },
-    blood_glucoses: [{
-        value: {
+    addFoods:[{
+        food: [{
+            name: {
+                type: String,
+                required: true
+            },
+            measure: {
+                type: String,
+                required: true
+            },
+            addGram: {
+                type: Number,
+                required: true
+            },
+            choCal: {
+                type: Number,
+                required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
+            updatedAt: {
+                type: Date
+            },
+        }],
+        blood_glucoses_value: {
             type: Number, // post
             required: true
         },
@@ -40,19 +65,23 @@ const UserSchema = new mongoose.Schema({
         },
         updatedAt: { // metodo put
             type: Date
-        }
-    }],
-    unity: [{ 
-        value: {
+        }   
+        ,
+        totalChoFood: {
             type: Number,
             required: true
         },
-        createdAt: {
-            type: Date,
-            default: Date.now
+        totalInsulinCorr: {
+            type: Number,
+            required: true
         },
-        updatedAt: {
-            type: Date
+        totalInsulinBolus: {
+            type: Number,
+            required: true
+        },
+        totalInsulin: {
+            type: Number,
+            required: true
         }
     }],
     born: {
@@ -86,6 +115,12 @@ const UserSchema = new mongoose.Schema({
         type: Number
     },
     glucoseTarget: {
+        type: Number
+    },
+    minTargetRange: {
+        type: Number
+    },
+    maxTargetRange: {
         type: Number
     }
 });

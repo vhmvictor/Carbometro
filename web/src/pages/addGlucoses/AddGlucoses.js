@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { logout } from '../../services/auth'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -11,29 +11,33 @@ import { ModalItem } from '../components/modalItem/ModalItem'
 
 const AddGlucoses = () => {
     
-    const [glucoses, setGlucoses] = useState([]);
+    const [foods, setFoods] = useState([]);
     const [redirect, setRedirect] = useState(false);
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    async function handleLoadBloods() {
+    useEffect(() => {
 
-        const id = getId();
-
-        await api.get(`/user/searchGlucose/${id}`)
-            .then(response => {
-                const bloods = response.data.blood_glucoses
-                setGlucoses(bloods);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
-
-    handleLoadBloods()
-
+        async function handleLoadFoods() {
+    
+            const id = getId();
+    
+            await api.get(`/user/searchAddFoods/${id}`)
+                .then(response => {
+                    const food = response.data.addFoods
+                    console.log(food)
+                    setFoods(food);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+    
+        handleLoadFoods()
+    
+        },[])
 
     async function handleLogout(e) {
         e.preventDefault()
@@ -70,9 +74,11 @@ const AddGlucoses = () => {
                 </div>
             </header>
             <div>
+                {
                 <AddItem
-                    glucose={glucoses}
+                    glucose={foods}
                 />
+                }
             </div>
         </>
     )

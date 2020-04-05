@@ -22,15 +22,13 @@ routes.get('/searchGlucose/:id', async (request, response) => {
     }
 });
 
-//lista ID glicemias do usuário logado 
-routes.get('/searchGlucoseId/:id', async (request, response) => {
+routes.get('/searchAddFoods/:id', async (request, response) => {
     try {
-        const blood_glucoses = await (await User.findById(request.params.id)).get('blood_glucoses._id');
-
-        return response.send({ blood_glucoses });
+        const addFoods = await (await User.findById(request.params.id)).get('addFoods');
+        return response.send({ addFoods });
     } catch (err) {
         console.log(err);
-        return response.status(400).send({ error: 'Error loading glucoses' });
+        return response.status(400).send({ error: 'Error loading foods' });
     }
 });
 
@@ -49,94 +47,310 @@ routes.post('/:userId/add_newFood', async (request, response) => {
 
     const userId = request.params.userId;
 
-    const { value, carbTotal, foodType } = request.body;
+    const { value, totalCho, foodType, refeicoes } = request.body;
 
     const apiResponse = await axios.get(`http://localhost:3333/user/${userId}`);
 
-    const { fc, glucoseTarget } = apiResponse.data.user;
+    const { fc, glucoseTarget, minTargetRange, maxTargetRange, breakfastCHO, lunchCHO, afternoonSnackCHO, dinnerCHO } = apiResponse.data.user;
 
-    try {
+    if (foodType === "breakfastCHO") {
 
-        const user = await User.findByIdAndUpdate(userId, {
+        if (value >= minTargetRange && value <= maxTargetRange) {
 
-            $push: {
-                blood_glucoses: {
-                    $each: [{ value }],
-                    $position: 0
-                }
+            const correcao = 0
+            const InsulinBolus = (totalCho / breakfastCHO).toFixed(2);
+            const totalInsulin = parseFloat(InsulinBolus);
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
             }
-        })
 
-        if (foodType === "breakfastCHO") {
-            const { breakfastCHO } = apiResponse.data.user;
-            const bolusTotal = getParams(value, carbTotal, breakfastCHO, fc, glucoseTarget);
-            console.log(bolusTotal)
-            console.log(carbTotal)
-            return response.json(bolusTotal);
-        } else if (foodType === "lunchCHO") {
-            const { lunchCHO } = apiResponse.data.user;
-            const bolusTotal = getParams(value, carbTotal, lunchCHO, fc, glucoseTarget);
-            console.log(bolusTotal);
-            console.log(carbTotal)
-            return response.json(bolusTotal);
-        } else if (foodType === "afternoonSnackCHO") {
-            const { afternoonSnackCHO } = apiResponse.data.user;
-            const bolusTotal = getParams(value, carbTotal, afternoonSnackCHO, fc, glucoseTarget);
-            console.log(bolusTotal);
-            console.log(carbTotal)
-            return response.json(bolusTotal);
-        } else if (foodType === "dinnerCHO") {
-            const { dinnerCHO } = apiResponse.data.user;
-            const bolusTotal = getParams(value, carbTotal, dinnerCHO, fc, glucoseTarget);
-            console.log(bolusTotal);
-            console.log(carbTotal)
-            return response.json(bolusTotal);
+        } else {
+
+            const InsulinBolus = (totalCho / breakfastCHO).toFixed(2);
+
+            const correcao = ((value - glucoseTarget) / fc).toFixed(2);
+
+            const totalInsulin = (parseFloat(InsulinBolus) + parseFloat(correcao));
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
+            }
+
         }
-        console.log('deu certo')
 
-    } catch (err) {
-        console.log('deu erro')
-        console.log(err)
+        return response.json({ value, totalCho, breakfastCHO, fc, glucoseTarget, refeicoes });
 
-        return response.status(400).send({ error: 'Error creating new food' });
-    }
+    } else if (foodType === "lunchCHO") {
 
-});
+        if (value >= minTargetRange && value <= maxTargetRange) {
 
+            const correcao = 0
+            const InsulinBolus = (totalCho / lunchCHO).toFixed(2);
+            const totalInsulin = parseFloat(InsulinBolus);
 
-//Adiciona uma nova glicemia para o usuário logado 
-/*
-routes.post('/:userId/add_glucose', async (request, response) => {
+            try {
 
-    const userId = request.params.userId;
-    const { blood_glucoses } = request.body;
+                const user = await User.findByIdAndUpdate(userId, {
 
-    try {
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
 
-        const user = await User.findByIdAndUpdate(userId, {
-            $push: {
-                blood_glucoses: {
-                    $each: blood_glucoses,
-                    $position: 0
-                }
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
             }
-        });
 
-        return response.send({ user });
+        } else {
+
+            const InsulinBolus = (totalCho / lunchCHO).toFixed(2);
+
+            const correcao = ((value - glucoseTarget) / fc).toFixed(2);
+
+            const totalInsulin = (parseFloat(InsulinBolus) + parseFloat(correcao));
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
+            }
+
+        }
+
+        return response.json({ value, totalCho, lunchCHO, fc, glucoseTarget, refeicoes });
+
+    } else if (foodType === "afternoonSnackCHO") {
+
+        if (value >= minTargetRange && value <= maxTargetRange) {
+
+            const correcao = 0
+            const InsulinBolus = (totalCho / afternoonSnackCHO).toFixed(2);
+            const totalInsulin = parseFloat(InsulinBolus);
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
+            }
+
+        } else {
+
+            const InsulinBolus = (totalCho / afternoonSnackCHO).toFixed(2);
+
+            const correcao = ((value - glucoseTarget) / fc).toFixed(2);
+
+            const totalInsulin = (parseFloat(InsulinBolus) + parseFloat(correcao));
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
+            }
+
+        }
+
+        return response.json({ value, totalCho, afternoonSnackCHO, fc, glucoseTarget, refeicoes });
+
+    } else if (foodType === "dinnerCHO") {
+
+        if (value >= minTargetRange && value <= maxTargetRange) {
+
+            const correcao = 0
+            const InsulinBolus = (totalCho / dinnerCHO).toFixed(2);
+            const totalInsulin = parseFloat(InsulinBolus);
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
+            }
+
+        } else {
+
+            const InsulinBolus = (totalCho / dinnerCHO).toFixed(2);
+
+            const correcao = ((value - glucoseTarget) / fc).toFixed(2);
+
+            const totalInsulin = (parseFloat(InsulinBolus) + parseFloat(correcao));
+
+            try {
+
+                const user = await User.findByIdAndUpdate(userId, {
+
+                    $push: {
+                        addFoods: {
+                            $each: [{
+                                food: refeicoes,
+                                blood_glucoses_value: value,
+                                totalChoFood: totalCho,
+                                totalInsulinCorr: correcao,
+                                totalInsulinBolus: InsulinBolus,
+                                totalInsulin: totalInsulin
+                            }],
+                            $position: 0
+                        }
+                    }
+                })
+
+            } catch (err) {
+                console.log('deu erro')
+                console.log(err)
+
+                return response.status(400).send({ error: 'Error creating new food' });
+            }
+
+        }
+
+        return response.json({ value, totalCho, dinnerCHO, fc, glucoseTarget, refeicoes });
+
     }
-    catch (err) {
-        console.log(err)
-        return response.status(400).send({ error: 'Error creating new glucose' });
-    }
+    console.log('deu certo')
 
 });
-*/
 
 //lista uma glicemia do usuario logado pelo id
 routes.get('/:userId/showValue/:bloodId', async (request, response) => {
     const userId = request.params.userId;
     const bloodId = request.params.bloodId;
-    
+
     try {
         const glucoses = await (await User.findById(userId)).get('blood_glucoses');
 
@@ -167,15 +381,15 @@ routes.put('/:userId/update/:bloodId', async (request, response) => {
     try {
 
         const now = new Date()
-        
+
         const user = await User.updateOne(
-            { _id: userId, 'blood_glucoses._id': bloodId },
-            { $set: { 'blood_glucoses.$.value': value, "blood_glucoses.$.updatedAt": now }}
+            { _id: userId, 'addFoods._id': bloodId },
+            { $set: { 'addFoods.$[].blood_glucoses_value': value, "addFoods.$[].updatedAt": now } }
 
         );
 
         return response.send(user);
-        
+
 
     } catch (err) {
         console.log(err);
@@ -186,11 +400,13 @@ routes.put('/:userId/update/:bloodId', async (request, response) => {
 });
 
 //Deleta uma glicemia do usuário logado 
-routes.delete('/:userId/delete/:bloodId', async (request, response) => {
+routes.delete('/:userId/delete/:foodId', async (request, response) => {
+
+    console.log(request.params.foodId)
 
     try {
         const del = await User.findByIdAndUpdate(request.params.userId, {
-            $pull: { 'blood_glucoses': { _id: request.params.bloodId } }
+            $pull: { 'addFoods': { _id: request.params.foodId } }
         }, { multi: true }
         )
         return response.send(del);
@@ -204,36 +420,43 @@ routes.delete('/:userId/delete/:bloodId', async (request, response) => {
 routes.post('/:userId/add_params', async (request, response) => {
 
     const userId = request.params.userId;
-    const { breakfastCHO, 
-            lunchCHO, 
-            afternoonSnackCHO, 
-            dinnerCHO, 
-            born, 
-            weight, 
-            height, 
-            sexo, 
-            typeDm,
-            fc,
-            glucoseTarget
+    const { breakfastCHO,
+        lunchCHO,
+        afternoonSnackCHO,
+        dinnerCHO,
+        born,
+        weight,
+        height,
+        sexo,
+        typeDm,
+        fc,
+        glucoseTarget,
+        minTargetRange,
+        maxTargetRange
     } = request.body;
 
     try {
 
         const user = await User.updateOne(
             { _id: userId },
-            { $set: 
-                { 'breakfastCHO': breakfastCHO, 
-                  'lunchCHO': lunchCHO, 
-                  'afternoonSnackCHO': afternoonSnackCHO, 
-                  'dinnerCHO': dinnerCHO,
-                  'born': born,
-                  'weight': weight,
-                  'height': height,
-                  'sexo': sexo,
-                  'typeDm': typeDm,
-                  'fc': fc,
-                  'glucoseTarget': glucoseTarget
-            }}
+            {
+                $set:
+                {
+                    'breakfastCHO': breakfastCHO,
+                    'lunchCHO': lunchCHO,
+                    'afternoonSnackCHO': afternoonSnackCHO,
+                    'dinnerCHO': dinnerCHO,
+                    'born': born,
+                    'weight': weight,
+                    'height': height,
+                    'sexo': sexo,
+                    'typeDm': typeDm,
+                    'fc': fc,
+                    'glucoseTarget': glucoseTarget,
+                    'minTargetRange': minTargetRange,
+                    'maxTargetRange': maxTargetRange
+                }
+            }
 
         );
 
